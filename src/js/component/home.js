@@ -1,24 +1,48 @@
-import React from "react";
-
-//include images into your bundle
-import rigoImage from "../../img/rigo-baby.jpg";
+import React, { useState, useEffect } from "react";
+import { Card } from "./card";
 
 //create your first component
 export function Home() {
+	const [species, setSpecies] = useState([]);
+
+	function splitArr(arr, howMany) {
+		let newArr = [];
+		let temp = [];
+		let count = 0;
+
+		for (let x of arr) {
+			if (count === howMany) {
+				newArr.push(temp);
+				temp = [];
+				count = 0;
+			}
+			temp.push(x);
+			count++;
+		}
+		if (temp.length > 0) newArr.push(temp);
+		return newArr;
+	}
+
+	useEffect(() => {
+		fetch("https://swapi.co/api/species/")
+			.then(resp => resp.json())
+			.then(data => {
+				let newData = splitArr(data.results, 4);
+				setSpecies(newData);
+			});
+	}, []);
+
 	return (
-		<div className="text-center mt-5">
-			<h1>Hello Rigo!</h1>
-			<p>
-				<img src={rigoImage} />
-			</p>
-			<a href="#" className="btn btn-success">
-				If you see this green button... bootstrap is working
-			</a>
-			<p>
-				Made by{" "}
-				<a href="http://www.4geeksacademy.com">4Geeks Academy</a>, with
-				love!
-			</p>
-		</div>
+		<>
+			{species.map((arr, i) => {
+				return (
+					<div key={i} className="d-flex justify-content-around">
+						{arr.map((item, index) => {
+							return <div key={index}>{item.name}</div>;
+						})}
+					</div>
+				);
+			})}
+		</>
 	);
 }
