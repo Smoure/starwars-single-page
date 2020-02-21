@@ -18,7 +18,7 @@ export function Home() {
 	return (
 		<>
 			<Jumbotron />
-			<div className="card-group justify-content-around">
+			<div className="card-group justify-content-around ">
 				{species.map((item, index) => {
 					return (
 						<Card
